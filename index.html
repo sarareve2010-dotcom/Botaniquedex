@@ -1,0 +1,57 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Botadex Pro v4</title><link rel="stylesheet" href="style.css"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#2f6f4e"></head><body>
+<header><div><h1>🌿 Botadex Pro v4</h1><p>1000 plantes — 6 photos — commentaires — modules pro</p></div><button id="installBtn" hidden>Installer</button></header>
+<main>
+<section class="dashboard"><div class="card"><span id="total">0</span><small>plantes</small></div><div class="card"><span id="seen">0</span><small>vues</small></div><div class="card"><span id="progressing">0</span><small>progression</small></div><div class="card"><span id="known">0</span><small>connues</small></div><div class="card"><span id="mastered">0</span><small>maîtrisées</small></div></section>
+<section class="progress-wrap"><div class="level-line"><b id="levelName">Débutante</b><span id="progressText"></span></div><div class="progress"><div id="progressBar"></div></div><div class="levels"><span>0</span><span>100 Naturaliste</span><span>250 Terrain</span><span>450 BE junior</span><span>700 solide</span><span>1000 expert</span></div></section>
+<nav class="tabs"><button class="tab active" data-tab="dex">Botadex</button><button class="tab" data-tab="identify">Identifier</button><button class="tab" data-tab="quiz">Quiz</button><button class="tab" data-tab="glossary">Glossaire</button><button class="tab" data-tab="habitats">EUNIS/Habitats</button><button class="tab" data-tab="phytoPro">Phyto Pro</button><button class="tab" data-tab="survey">Relevés</button><button class="tab" data-tab="export">Sauvegarde</button></nav>
+
+<section id="dex" class="panel active"><div class="filters"><input id="search" placeholder="Rechercher plante, latin, famille, habitat, phyto..."><select id="familyFilter"><option value="">Toutes familles</option></select><select id="statusFilter"><option value="">Tous statuts</option><option value="unknown">⬜ Pas encore</option><option value="seen">👀 Vue</option><option value="progress">🔄 En progression</option><option value="known">✅ Connue</option><option value="mastered">⭐ Maîtrisée</option></select></div><p class="legend"><span class="prot">Protégée/patrimoniale à vérifier</span> <span class="inv">Invasive/à surveiller</span></p><div id="plantList" class="plant-list"></div></section>
+
+<section id="identify" class="panel"><div class="box"><h2>🧭 Identifier — clé pro simplifiée</h2><p>Réponds même partiellement : l’outil propose des familles probables. Il ne remplace pas une flore, mais il t’entraîne au raisonnement.</p><div class="key-sections">
+<h3>1. Type biologique</h3><label><input type="checkbox" id="k_woody"> ligneux</label><label><input type="checkbox" id="k_herb"> herbacée</label><label><input type="checkbox" id="k_gram"> graminoïde</label><label><input type="checkbox" id="k_fern"> fougère/prêle</label>
+<h3>2. Feuilles/tige</h3><label><input type="checkbox" id="k_opp"> feuilles opposées</label><label><input type="checkbox" id="k_alt"> feuilles alternes</label><label><input type="checkbox" id="k_whorl"> verticillées</label><label><input type="checkbox" id="k_comp"> feuilles composées</label><label><input type="checkbox" id="k_stip"> stipules</label><label><input type="checkbox" id="k_square"> tige carrée</label><label><input type="checkbox" id="k_tri"> tige triangulaire</label><label><input type="checkbox" id="k_latex"> latex</label><label><input type="checkbox" id="k_spines"> épines/aiguillons</label>
+<h3>3. Fleur/inflorescence</h3><label><input type="checkbox" id="k_cap"> capitule</label><label><input type="checkbox" id="k_cross"> 4 pétales en croix</label><label><input type="checkbox" id="k_pea"> fleur papilionacée</label><label><input type="checkbox" id="k_umbel"> ombelle</label><label><input type="checkbox" id="k_bilab"> fleur bilabiée</label><label><input type="checkbox" id="k_5pet"> 5 pétales libres</label><label><input type="checkbox" id="k_spike"> épi</label><label><input type="checkbox" id="k_panicle"> panicule</label>
+<h3>4. Milieu</h3><label><input type="checkbox" id="k_wet"> humide</label><label><input type="checkbox" id="k_dry"> sec</label><label><input type="checkbox" id="k_wood"> bois</label><label><input type="checkbox" id="k_meadow"> prairie</label><label><input type="checkbox" id="k_heath"> lande</label><label><input type="checkbox" id="k_rud"> friche/culture</label></div><button id="runKey">Proposer familles / pistes</button><div id="keyResult"></div></div></section>
+
+<section id="quiz" class="panel"><div class="box"><h2>Quiz</h2><p id="quizQuestion">Clique sur “Nouvelle question”.</p><div id="quizOptions"></div><p id="quizFeedback"></p><button id="newQuiz">Nouvelle question</button></div></section>
+<section id="glossary" class="panel"><div class="box"><h2>Glossaire botanique pro</h2><p>Recherche un mot rencontré dans une flore : limbe, stipule, ligule, utricule, ovaire infère...</p><input id="glossSearch" placeholder="Rechercher un terme..." oninput="renderGlossary()"><div id="glossaryList" class="gloss-grid"></div></div></section>
+<section id="habitats" class="panel"><div class="box"><h2>EUNIS / Habitats</h2><p>Repère visuel et pédagogique : EUNIS se détermine par la structure du milieu + le cortège, pas par une seule plante.</p><input id="habSearch" placeholder="Rechercher : prairie humide, haie, roselière, E3, D5..." oninput="renderHabitats()"><div id="habitatList" class="hab-grid"></div></div></section>
+
+<section id="phytoPro" class="panel">
+  <div class="box">
+    <h2>🌱 Phytosociologie Pro</h2>
+    <p>Module d’entraînement : raisonnement par cortège, structure, écologie et hiérarchie syntaxonomique. Une proposition reste à confirmer par relevé complet et références régionales.</p>
+    <div class="phyto-layout">
+      <div>
+        <h3>1. Fiches syntaxons</h3>
+        <input id="syntaxSearch" placeholder="Rechercher : Molinion, prairie humide, haie, roselière..." oninput="renderSyntaxons()">
+        <div id="syntaxonList"></div>
+      </div>
+      <div>
+        <h3>2. Diagnostic par cortège</h3>
+        <p>Ajoute les espèces dominantes ou importantes observées, une par ligne.</p>
+        <textarea id="phytoSpecies" placeholder="Ex :
+Molinia caerulea
+Juncus acutiflorus
+Succisa pratensis"></textarea>
+        <div class="key-sections">
+          <label><input type="checkbox" id="ph_wet"> humide / engorgé</label>
+          <label><input type="checkbox" id="ph_oligo"> oligotrophe</label>
+          <label><input type="checkbox" id="ph_eutro"> eutrophe / nitrophile</label>
+          <label><input type="checkbox" id="ph_meadow"> prairie gérée</label>
+          <label><input type="checkbox" id="ph_reed"> grands hélophytes</label>
+          <label><input type="checkbox" id="ph_wood"> boisé / forestier</label>
+          <label><input type="checkbox" id="ph_hedge"> haie / fourré</label>
+          <label><input type="checkbox" id="ph_heath"> lande acide</label>
+          <label><input type="checkbox" id="ph_ruderal"> friche / sol perturbé</label>
+        </div>
+        <button id="runPhyto">Proposer syntaxon / EUNIS</button>
+        <div id="phytoResult"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="survey" class="panel"><div class="box"><h2>Relevés terrain</h2><input id="surveyTitle" placeholder="Titre du relevé"><textarea id="surveyText" placeholder="Date, lieu, habitat, espèces, recouvrement Braun-Blanquet, remarques..."></textarea><button id="saveSurvey">Enregistrer le relevé</button><div id="surveyList"></div></div></section>
+<section id="export" class="panel"><div class="box"><h2>Sauvegarde</h2><p>Progression + commentaires + relevés sont exportables. Les photos restent stockées localement sur l’appareil.</p><button id="exportBtn">Exporter</button><textarea id="exportBox"></textarea><button id="importBtn">Importer</button></div></section>
+</main><dialog id="plantDialog"><div id="dialogContent"></div><button id="closeDialog">Fermer</button></dialog><script src="plants.js"></script><script src="app.js"></script></body></html>
