@@ -3,7 +3,7 @@
 <main>
 <section class="dashboard"><div class="card"><span id="total">0</span><small>plantes</small></div><div class="card"><span id="seen">0</span><small>vues</small></div><div class="card"><span id="progressing">0</span><small>progression</small></div><div class="card"><span id="known">0</span><small>connues</small></div><div class="card"><span id="mastered">0</span><small>maîtrisées</small></div></section>
 <section class="progress-wrap"><div class="level-line"><b id="levelName">Débutante</b><span id="progressText"></span></div><div class="progress"><div id="progressBar"></div></div><div class="levels"><span>0</span><span>100 Naturaliste</span><span>250 Terrain</span><span>450 BE junior</span><span>700 solide</span><span>1000 expert</span></div></section>
-<nav class="tabs"><button class="tab active" data-tab="dex">Botadex</button><button class="tab" data-tab="identify">Identifier</button><button class="tab" data-tab="quiz">Quiz</button><button class="tab" data-tab="glossary">Glossaire</button><button class="tab" data-tab="habitats">EUNIS/Habitats</button><button class="tab" data-tab="phytoPro">Phyto Pro</button><button class="tab" data-tab="survey">Relevés</button><button class="tab" data-tab="export">Sauvegarde</button></nav>
+<nav class="tabs"><button class="tab active" data-tab="dex">Botadex</button><button class="tab" data-tab="identify">Identifier</button><button class="tab" data-tab="quiz">Quiz</button><button class="tab" data-tab="glossary">Glossaire</button><button class="tab" data-tab="habitats">EUNIS/Habitats</button><button class="tab" data-tab="phytoPro">Phyto Pro</button><button class="tab" data-tab="survey">Relevés</button><button class="tab" data-tab="cases">Cas pratiques</button><button class="tab" data-tab="writing">Rédaction BE</button><button class="tab" data-tab="export">Sauvegarde</button></nav>
 
 <section id="dex" class="panel active"><div class="filters"><input id="search" placeholder="Rechercher plante, latin, famille, habitat, phyto..."><select id="familyFilter"><option value="">Toutes familles</option></select><select id="statusFilter"><option value="">Tous statuts</option><option value="unknown">⬜ Pas encore</option><option value="seen">👀 Vue</option><option value="progress">🔄 En progression</option><option value="known">✅ Connue</option><option value="mastered">⭐ Maîtrisée</option></select></div><p class="legend"><span class="prot">Protégée/patrimoniale à vérifier</span> <span class="inv">Invasive/à surveiller</span></p><div id="plantList" class="plant-list"></div></section>
 
@@ -19,7 +19,7 @@
 
 <section id="phytoPro" class="panel">
   <div class="box">
-    <h2>🌱 Phytosociologie Pro</h2>
+    <h2>🌱 Interface pro flore-habitats</h2>
     <p>Module d’entraînement : raisonnement par cortège, structure, écologie et hiérarchie syntaxonomique. Une proposition reste à confirmer par relevé complet et références régionales.</p>
     <div class="phyto-layout">
       <div>
@@ -53,5 +53,46 @@ Succisa pratensis"></textarea>
 </section>
 
 <section id="survey" class="panel"><div class="box"><h2>Relevés terrain</h2><input id="surveyTitle" placeholder="Titre du relevé"><textarea id="surveyText" placeholder="Date, lieu, habitat, espèces, recouvrement Braun-Blanquet, remarques..."></textarea><button id="saveSurvey">Enregistrer le relevé</button><div id="surveyList"></div></div></section>
+
+<section id="cases" class="panel">
+  <div class="hero-card">
+    <h2>🧪 Cas pratiques — Chargée d’étude flore/habitats</h2>
+    <p>Entraîne-toi comme en bureau d’étude : contexte, cortège, EUNIS, Natura 2000, enjeu, rédaction.</p>
+  </div>
+  <div id="caseList" class="case-grid"></div>
+</section>
+
+<section id="writing" class="panel">
+  <div class="hero-card">
+    <h2>✍️ Aide à la rédaction BE</h2>
+    <p>Génère une base de texte professionnelle à adapter pour un rapport, une note de synthèse ou un diagnostic écologique.</p>
+  </div>
+  <div class="writer-layout">
+    <div class="box">
+      <label>Type de texte</label>
+      <select id="writerType">
+        <option value="diagnostic">Diagnostic habitat/flore</option>
+        <option value="protected">Espèces protégées/patrimoniales</option>
+        <option value="invasive">Espèces invasives</option>
+        <option value="natura">Natura 2000 / EUNIS</option>
+      </select>
+      <label>Habitat / contexte</label>
+      <input id="wrHabitat" placeholder="ex : prairie humide oligotrophe">
+      <label>Espèces principales</label>
+      <input id="wrSpecies" placeholder="ex : Molinia, Juncus, Succisa">
+      <label>Enjeu pressenti</label>
+      <select id="wrIssue">
+        <option>faible</option><option>modéré</option><option>fort</option><option>très fort</option>
+      </select>
+      <button id="generateText">Générer un brouillon</button>
+    </div>
+    <div class="box">
+      <h3>Texte à retravailler</h3>
+      <textarea id="writerOutput" class="report-text"></textarea>
+      <button id="copyText">Copier</button>
+    </div>
+  </div>
+</section>
+
 <section id="export" class="panel"><div class="box"><h2>Sauvegarde</h2><p>Progression + commentaires + relevés sont exportables. Les photos restent stockées localement sur l’appareil.</p><button id="exportBtn">Exporter</button><textarea id="exportBox"></textarea><button id="importBtn">Importer</button></div></section>
 </main><dialog id="plantDialog"><div id="dialogContent"></div><button id="closeDialog">Fermer</button></dialog><script src="plants.js"></script><script src="app.js"></script></body></html>

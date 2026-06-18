@@ -20,3 +20,17 @@
 .score-bar div{height:100%;background:var(--g)}
 .why{background:#fff7df;border-left:5px solid #d39b27;border-radius:10px;padding:10px;margin-top:8px}
 @media(max-width:900px){.phyto-layout{grid-template-columns:1fr}}
+
+body{background:radial-gradient(circle at top left,#e7f3e5 0,#f4f8f2 36%,#eef5ef 100%)}
+header{border-bottom-left-radius:28px;border-bottom-right-radius:28px;box-shadow:0 10px 28px #1b4b3424}
+.hero-card{background:linear-gradient(135deg,#ffffff,#eef7eb);border:1px solid var(--b);border-radius:24px;padding:18px;margin-bottom:14px;box-shadow:0 8px 28px #00000012}
+.hero-card h2{margin-top:0;color:var(--g)}
+.case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.case-card{background:white;border:1px solid var(--b);border-radius:20px;padding:16px;box-shadow:0 5px 20px #0001;border-top:6px solid var(--g)}
+.case-card h3{margin-top:0;color:var(--g)}
+.case-card ul{padding-left:20px}
+.case-correction{display:none;background:#f3f8f1;border-left:5px solid var(--g);border-radius:12px;padding:10px;margin-top:10px}
+.writer-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:16px}
+.writer-layout label{font-weight:700;display:block;margin-top:10px;color:var(--g)}
+.report-text{min-height:360px;line-height:1.5}
+@media(max-width:850px){.writer-layout{grid-template-columns:1fr}}

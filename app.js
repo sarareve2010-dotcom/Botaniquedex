@@ -88,4 +88,41 @@ function runPhytoDiagnosis(){
   </div>`).join('');
 }
 
-openDB().then(()=>{populateFamilies();render();renderGlossary();renderHabitats();renderSyntaxons(); if(document.getElementById('runPhyto')) runPhyto.onclick=runPhytoDiagnosis});
+
+const CASES = [{"title": "Prairie humide oligotrophe en fond de vallon", "context": "Parcelle fauchée tardivement, sol hydromorphe, végétation assez basse à moyenne, faible fertilisation apparente.", "species": ["Molinia caerulea", "Juncus acutiflorus", "Succisa pratensis", "Carex panicea", "Lotus pedunculatus"], "questions": ["Habitat probable ?", "Espèces indicatrices ?", "Enjeu pressenti ?", "Confusions à vérifier ?"], "correction": "Habitat probable : prairie humide oligotrophe à méso-oligotrophe, proche du Molinion caeruleae. Enjeu potentiellement modéré à fort selon rareté locale, état de conservation et présence d’espèces protégées/patrimoniales. Confusions : prairie humide eutrophe, bas-marais, moliniaie dégradée."}, {"title": "Haie bocagère ancienne", "context": "Linéaire arboré et arbustif dense, vieux chênes, talus, ronces, prunelliers et aubépines.", "species": ["Quercus robur", "Crataegus monogyna", "Prunus spinosa", "Rubus fruticosus agg.", "Rosa canina agg.", "Corylus avellana"], "questions": ["Habitat EUNIS ?", "Éléments structuraux à enjeu ?", "Groupes faune concernés ?", "Que cartographier ?"], "correction": "Habitat probable : FA haies, avec composante F3 fourrés/manteaux selon structure. Enjeu renforcé par ancienneté, continuité écologique, arbres à cavités, talus, lisières et connexion bocagère. À cartographier : linéaire, largeur, strates, arbres remarquables, espèces invasives éventuelles."}, {"title": "Friche rudérale nitrophile", "context": "Ancien dépôt remanié, sol nu par endroits, végétation haute et dense, espèces nitrophiles.", "species": ["Urtica dioica", "Artemisia vulgaris", "Cirsium vulgare", "Dipsacus fullonum", "Conyza canadensis"], "questions": ["Enjeu flore ?", "Habitat EUNIS ?", "Invasives à rechercher ?", "Comment nuancer la bioévaluation ?"], "correction": "Habitat probable : E5 friches herbacées / Artemisietea vulgaris. Enjeu souvent faible à modéré si cortège banal et rudéral, mais à nuancer selon espèces patrimoniales, rôle de refuge, mosaïque d’habitats et présence d’invasives."}, {"title": "Mare bocagère eutrophe", "context": "Petite mare prairiale, berges piétinées, eau stagnante, ceinture d’hélophytes.", "species": ["Typha latifolia", "Alisma plantago-aquatica", "Lemna minor", "Juncus effusus", "Persicaria hydropiper"], "questions": ["Habitats EUNIS ?", "Zonages à distinguer ?", "Plantes utiles au diagnostic ?", "Enjeu potentiel ?"], "correction": "Habitats probables : C1 eaux stagnantes, D5/C3 ceintures d’hélophytes selon structure. Cartographier séparément eau libre, végétation amphibie, roselière/massette, berges piétinées. Enjeu à évaluer selon naturalité, espèces patrimoniales, amphibiens et connectivité."}];
+const WRITER_TEMPLATES = {"diagnostic": "Le secteur étudié présente une mosaïque d’habitats dominée par [HABITAT PRINCIPAL]. Le cortège floristique observé est principalement composé de [ESPECES PRINCIPALES]. Ces éléments traduisent un contexte [HUMIDITE / TROPHIE / GESTION].\n\nAu regard de la typologie EUNIS, l’habitat peut être rattaché à [CODE EUNIS] sous réserve de confirmation par un relevé floristique complet. Les espèces les plus structurantes/indicatrices sont [ESPECES INDICATRICES].\n\nL’enjeu floristique est évalué à [ENJEU], en raison de [JUSTIFICATION : espèces protégées, patrimoniales, état de conservation, rareté, dynamique, invasives].", "protected": "Une attention particulière a été portée à la recherche d’espèces protégées et patrimoniales. Les espèces à enjeu recensées ou à rechercher sont : [ESPECES].\n\nPour chaque station, il conviendra de préciser la localisation, l’effectif estimé, le stade phénologique, l’état de conservation de l’habitat support et les menaces éventuelles. Les confusions possibles avec des taxons proches doivent être vérifiées à partir de critères morphologiques fiables.", "invasive": "Des espèces exotiques envahissantes ont été observées ou sont à rechercher sur le site, notamment [ESPECES INVASIVES]. Leur présence constitue un enjeu de gestion, en particulier au niveau des zones perturbées, berges, remblais et lisières.\n\nIl est recommandé d’éviter toute dispersion lors des travaux : export de terres contaminées, broyage en période défavorable, circulation d’engins et déplacement de fragments végétatifs.", "natura": "L’analyse du cortège floristique et de la structure de végétation permet d’envisager un rapprochement avec l’habitat Natura 2000 [CODE / INTITULE], sous réserve de validation par les critères diagnostiques officiels.\n\nLes éléments favorables à ce rattachement sont : [ESPECES CARACTERISTIQUES], [STRUCTURE], [CONDITIONS ECOLOGIQUES]. Les limites de l’interprétation résident dans [LIMITES : état dégradé, surface réduite, cortège incomplet, saison d’inventaire]."};
+
+function renderCases(){
+  if(!document.getElementById('caseList')) return;
+  caseList.innerHTML = CASES.map((c,i)=>`<div class="case-card">
+    <h3>${c.title}</h3>
+    <p><b>Contexte :</b> ${c.context}</p>
+    <p><b>Cortège :</b> <i>${c.species.join(', ')}</i></p>
+    <b>Questions pro :</b>
+    <ul>${c.questions.map(q=>`<li>${q}</li>`).join('')}</ul>
+    <button onclick="toggleCase(${i})">Voir correction</button>
+    <div id="casecorr-${i}" class="case-correction">${c.correction}</div>
+  </div>`).join('');
+}
+function toggleCase(i){
+  const el=document.getElementById('casecorr-'+i);
+  el.style.display = el.style.display==='block' ? 'none' : 'block';
+}
+function generateReportText(){
+  const type=writerType.value;
+  let txt=WRITER_TEMPLATES[type]||'';
+  const habitat=wrHabitat.value||'[HABITAT PRINCIPAL]';
+  const species=wrSpecies.value||'[ESPECES PRINCIPALES]';
+  const issue=wrIssue.value||'[ENJEU]';
+  txt=txt.replaceAll('[HABITAT PRINCIPAL]', habitat)
+         .replaceAll('[ESPECES PRINCIPALES]', species)
+         .replaceAll('[ESPECES]', species)
+         .replaceAll('[ESPECES INVASIVES]', species)
+         .replaceAll('[ESPECES INDICATRICES]', species)
+         .replaceAll('[ENJEU]', issue)
+         .replaceAll('[CODE EUNIS]', '[CODE EUNIS à préciser]')
+         .replaceAll('[HUMIDITE / TROPHIE / GESTION]', '[humidité, trophie et gestion à préciser]');
+  writerOutput.value=txt;
+}
+
+openDB().then(()=>{populateFamilies();render();renderGlossary();renderHabitats();renderSyntaxons();renderCases(); if(document.getElementById('runPhyto')) runPhyto.onclick=runPhytoDiagnosis; if(document.getElementById('generateText')) generateText.onclick=generateReportText; if(document.getElementById('copyText')) copyText.onclick=()=>navigator.clipboard.writeText(writerOutput.value);});
